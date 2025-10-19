@@ -10,40 +10,14 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Repositories.Classes
 {
-    internal class MemberRepository : IMemberRepository
+    internal class MemberRepository : GenericRepository<Member>, IMemberRepository
     {
-        private readonly GymDbContext _context;
-
-        public MemberRepository(GymDbContext context)
+        public MemberRepository(GymDbContext context) : base(context)
         {
-            _context = context;
         }
-        public int Add(Member member)
+        public IEnumerable<Session> GetAllSessions(int MemeberId)
         {
-            _context.Add(member);
-            return _context.SaveChanges();
-        }
-
-        public int Delete(int Id)
-        {
-            var member = GetById(Id);
-
-            if (member is null)
-                return 0;
-            
-            _context.Remove(member);
-            return _context.SaveChanges();
-        }
-
-        public IEnumerable<Member> GetAll() => _context.Members.ToList();
-        
-        public Member? GetById(int Id) => _context.Members.Find(Id);
-     
-
-        public int Update(Member member)
-        {
-            _context.Update(member);
-            return _context.SaveChanges();
+            throw new NotImplementedException();
         }
     }
 }

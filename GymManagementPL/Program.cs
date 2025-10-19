@@ -16,6 +16,15 @@ namespace GymManagementPL
                 Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            // Important Note : DbContext Is Scoped by Default in Dependency Injection.
+
+            //// One Object per Lifetime Application and Disposed after Application Shutdown
+            //builder.Services.AddSingleton<>();
+            //// One Object per Client Request and Disposed after Request
+            //builder.Services.AddScoped<>();
+            //// New Object per Injection and Disposed after Use
+            //builder.Services.AddTransient<>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
