@@ -32,7 +32,7 @@ namespace GymManagementDAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Height = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BloodType = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -91,8 +91,7 @@ namespace GymManagementDAL.Migrations
                     Gender = table.Column<int>(type: "int", nullable: false),
                     BuildingNumber = table.Column<int>(type: "int", nullable: false),
                     City = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
-                    Street = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Street = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {

@@ -19,6 +19,6 @@ namespace GymManagementDAL.Entities
         public DateOnly DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public Address Address { get; set; } = null!;
-        public string? Image { get; set; }
+
     }
 }
