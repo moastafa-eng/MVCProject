@@ -1,4 +1,6 @@
 using GymManagementDAL.Data.Contexts;
+using GymManagementDAL.Repositories.Classes;
+using GymManagementDAL.Repositories.interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementPL
@@ -24,6 +26,8 @@ namespace GymManagementPL
             //builder.Services.AddScoped<>();
             //// New Object per Injection and Disposed after Use
             //builder.Services.AddTransient<>();
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Add Scope (Object of UnitOfWork) per request and Dispose this Scope when request is ended
 
             var app = builder.Build();
 

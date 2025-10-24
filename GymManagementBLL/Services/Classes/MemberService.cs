@@ -1,8 +1,8 @@
 ﻿using GymManagementBLL.Services.Interfaces;
 using GymManagementBLL.ViewModels.MemberViewModels;
 using GymManagementDAL.Entities;
+using GymManagementDAL.Repositories.Classes;
 using GymManagementDAL.Repositories.interfaces;
-using Microsoft.Identity.Client;
 
 namespace GymManagementBLL.Services.Classes
 {
@@ -11,26 +11,15 @@ namespace GymManagementBLL.Services.Classes
     // MemberService Takes Data from Member Repository and process it to return MemberViewModel 
     public class MemberService : IMemberService
     {
+        private readonly IUnitOfWork _unitOfWork;
+
         // Getting Reference from Member Repository
-        private readonly IGenericRepository<Member> _memberRepository;
-        private readonly IGenericRepository<MemberShip> _membershipRepository;
-        private readonly IGenericRepository<Plan> _planRepository;
-        private readonly IGenericRepository<HealthRecord> _healthRecordRepository;
-        private readonly IGenericRepository<Booking> _bookingRepository;
+
 
         // Injecting Member Repository via constructor
-        public MemberService(
-            IGenericRepository<Member> memberRepository,
-            IGenericRepository<MemberShip> membershipRepository,
-            IGenericRepository<Plan> planRepository,
-            IGenericRepository<HealthRecord> healthRecordRepository,
-            IGenericRepository<Booking> bookingRepository)
+        public MemberService(IUnitOfWork unitOfWork)
         {
-            _memberRepository = memberRepository;
-            _membershipRepository = membershipRepository;
-            _planRepository = planRepository;
-            _healthRecordRepository = healthRecordRepository;
-            _bookingRepository = bookingRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public bool CreateMember(CreateMemberViewModel model)
@@ -64,7 +53,8 @@ namespace GymManagementBLL.Services.Classes
                     }
                 };
 
-                _memberRepository.Add(member);
+                _unitOfWork.GetRepository<Member>().Add(member);
+                _unitOfWork.SaveChanges();
                 return true;
             }
             catch
@@ -75,18 +65,18 @@ namespace GymManagementBLL.Services.Classes
 
         public bool RemoveMember(int memberId)
         {
-            var member = _memberRepository.GetById(memberId);
+            var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
 
             if (member is null)
                 return false;
 
-            var activeBooking = _bookingRepository.GetAll(x => x.MemberId == memberId 
+            var activeBooking = _unitOfWork.GetRepository<Booking>().GetAll(x => x.MemberId == memberId 
             && x.Session.StartDate > DateTime.Now);
 
             if (activeBooking.Any())
                 return false;
 
-            var memberShips = _membershipRepository.GetAll(x => x.MemberId == memberId);
+            var memberShips = _unitOfWork.GetRepository<MemberShip>().GetAll(x => x.MemberId == memberId);
 
             try
             {
@@ -94,11 +84,12 @@ namespace GymManagementBLL.Services.Classes
                 {
                     foreach(var memberShip in memberShips)
                     {
-                        _membershipRepository.Delete(memberShip);
+                        _unitOfWork.GetRepository<MemberShip>().Delete(memberShip);
                     }
                 }
 
-                _memberRepository.Delete(member);
+                _unitOfWork.GetRepository<Member>().Delete(member);
+                _unitOfWork.SaveChanges();
                 return true;
             }
             catch
@@ -110,16 +101,16 @@ namespace GymManagementBLL.Services.Classes
         public IEnumerable<MemberViewModel> GetAllMembers()
         {
             // Get  IEnumerable<Member> from Member Repository
-            var member = _memberRepository.GetAll() ?? []; // [] means empty list if null
+            var members = _unitOfWork.GetRepository<Member>().GetAll() ?? []; // [] means empty list if null
 
-            if (member is null || !member.Any()) // [member is null] is unnecessary due to null-coalescing above
+            if (members is null || !members.Any()) // [member is null] is unnecessary due to null-coalescing above
             {
                 return []; // Return an empty list if no members found
             }
 
             // Mapping Member entities to MemberViewModel
             // IEnumerable<MemberViewModel>
-            var memberViewModels = member.Select(x => new MemberViewModel
+            var memberViewModels = members.Select(x => new MemberViewModel // Mapping between entity and ViewMdel
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -142,7 +133,7 @@ namespace GymManagementBLL.Services.Classes
         // Returns null if the member does not exist.
         public MemberViewModel? GetMemberDetails(int memberId)
         {
-            var member = _memberRepository.GetById(memberId);
+            var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
 
             if (member is null)
             {
@@ -162,14 +153,14 @@ namespace GymManagementBLL.Services.Classes
 
             };
 
-            var activeMemberShip = _membershipRepository.GetAll(x =>
+            var activeMemberShip = _unitOfWork.GetRepository<MemberShip>().GetAll(x =>
             x.MemberId == memberId
             && x.Status == "Active")
                 .FirstOrDefault();
 
             if (activeMemberShip is not null)
             {
-                var activePlans = _planRepository.GetById(activeMemberShip.PlanId);
+                var activePlans = _unitOfWork.GetRepository<Plan>().GetById(activeMemberShip.PlanId);
 
                 memberViewModel.PlanName = activePlans?.Name;
                 memberViewModel.MemberShipStartDate = activeMemberShip.CreatedAt.ToLongDateString();
@@ -182,7 +173,7 @@ namespace GymManagementBLL.Services.Classes
         public HealthRecordViewModel? GetMemberHealthRecord(int memberId)
         {
             // because HealthRecord and Member in the same table relation ship (One to one)
-            var memberHealthRecord = _healthRecordRepository.GetById(memberId);
+            var memberHealthRecord = _unitOfWork.GetRepository<HealthRecord>().GetById(memberId);
 
             if (memberHealthRecord is null)
             {
@@ -203,7 +194,7 @@ namespace GymManagementBLL.Services.Classes
 
         public MemberToUpdateViewModel? GetMemberToUpdate(int memberId)
         {
-            var member = _memberRepository.GetById(memberId);
+            var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
 
             if (member is null)
             {
@@ -226,7 +217,7 @@ namespace GymManagementBLL.Services.Classes
 
         public bool UpdateMemberDetails(int memberId ,MemberToUpdateViewModel model)
         {
-            var member = _memberRepository.GetById(memberId);
+            var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
 
             if (member is null)
             {
@@ -244,9 +235,10 @@ namespace GymManagementBLL.Services.Classes
             member.Address.City = model.City;
             member.Address.Street = model.Street;
             member.CreatedAt = DateTime.Now;
-           
 
-            _memberRepository.Update(member);
+
+            _unitOfWork.GetRepository<Member>().Update(member);
+            _unitOfWork.SaveChanges();
             return true;
         }
 
@@ -264,13 +256,13 @@ namespace GymManagementBLL.Services.Classes
 
         private bool IsEmailExists (string email)
         {
-            var ExistingEmail = _memberRepository.GetAll(x=> x.Email == email);
+            var ExistingEmail = _unitOfWork.GetRepository<Member>().GetAll(x=> x.Email == email);
             return ExistingEmail is not null && ExistingEmail.Any();
         }
 
         private bool IsPhoneExists(string phone)
         {
-            var ExistingPhone = _memberRepository.GetAll(x => x.Phone == phone);
+            var ExistingPhone = _unitOfWork.GetRepository<Member>().GetAll(x => x.Phone == phone);
             return ExistingPhone is not null && ExistingPhone.Any();
         }
 

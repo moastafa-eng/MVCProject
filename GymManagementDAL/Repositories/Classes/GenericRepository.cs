@@ -1,7 +1,9 @@
-﻿using GymManagementDAL.Data.Contexts;
+﻿using Azure;
+using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Channels;
 
 namespace GymManagementDAL.Repositories.Classes
 {
@@ -15,17 +17,9 @@ namespace GymManagementDAL.Repositories.Classes
         {
             _context = context;
         }
-        public void Add(TEntity entity)
-        {
-            _context.Add(entity);
-            _context.SaveChanges();
-        }
+        public void Add(TEntity entity) => _context.Add(entity); //The UnitOfWork is responsible for saving the changes after the operation.
 
-        public void Delete(TEntity entity)
-        {
-            _context.Remove(entity);
-            _context.SaveChanges();
-        }
+        public void Delete(TEntity entity) => _context.Remove(entity); //The UnitOfWork is responsible for saving the changes after the operation.
 
         // Func<TEntity, bool>? Condition = null: optional condition (filter) — you can pass a function to filter the data or leave it empty to get all data
         // _context.Set<TEntity>(): used to dynamically access the table that matches the current entity type (TEntity)
@@ -48,10 +42,7 @@ namespace GymManagementDAL.Repositories.Classes
 
         public TEntity? GetById(int Id) => _context.Set<TEntity>().Find(Id);
 
-        public void Update(TEntity entity)
-        {
-            _context.Update(entity);
-            _context.SaveChanges();
-        }
+        public void Update(TEntity entity) => _context.Update(entity); //The UnitOfWork is responsible for saving the changes after the operation.
+
     }
 }
