@@ -1,4 +1,6 @@
 using GymManagementBLL;
+using GymManagementBLL.Services.Classes;
+using GymManagementBLL.Services.Interfaces;
 using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Data.DataSeed;
 using GymManagementDAL.Repositories.Classes;
@@ -30,8 +32,12 @@ namespace GymManagementPL
             //builder.Services.AddTransient<>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Add Scope (Object of UnitOfWork) per request and Dispose this Scope when request is ended
-
-
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>(); // Dependency injection container for SessionRepository.
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>(); // Dependency injection container for AnalyticsService.
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
             // Registers MappingProfile in DI so AutoMapper builds its configuration.
             // When IMapper is injected, DI provides a ready Mapper that applies all rules from the Profile.
             builder.Services.AddAutoMapper(x => x.AddProfile(new MappingProfile())); // Register AutoMapper and add MappingProfile
@@ -61,16 +67,16 @@ namespace GymManagementPL
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthorization(); 
 
             app.MapStaticAssets();
-            app.MapControllerRoute(
+            app.MapControllerRoute( // Define the default routing pattern
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}") // If no controller is specified in the URL, use HomeController and Index action by default
+                .WithStaticAssets(); // Enable serving static files (int wwwroot) for this route
 
             app.Run();
         }
