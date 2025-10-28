@@ -18,11 +18,15 @@ namespace GymManagementDAL.Repositories.Classes
     {
         private readonly GymDbContext _context; // DbContext instance shared across repositories
         private readonly Dictionary<string, object> Repositories = []; // Stores created generic repositories to avoid re-creation
+        public ISessionRepository SessionRepository { get; set; } // this Field is public to be accessed from outside
 
-        public UnitOfWork(GymDbContext context) 
+        public UnitOfWork(GymDbContext context, ISessionRepository sessionRepository) 
         {
             _context = context; // Inject DbContext through constructor
+            SessionRepository = sessionRepository; // Inject specific repository through constructor
         }
+
+
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity
         {
             var EntityName = typeof(TEntity).Name;

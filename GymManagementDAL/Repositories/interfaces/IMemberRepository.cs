@@ -4,7 +4,7 @@ namespace GymManagementDAL.Repositories.interfaces
 {
     public interface IMemberRepository : IGenericRepository<Member>
     {
-        IEnumerable<Session> GetAllSessions(int MemeberId);
+        IEnumerable<Session> GetAllSessions(int MemberId);
 
     }
 }

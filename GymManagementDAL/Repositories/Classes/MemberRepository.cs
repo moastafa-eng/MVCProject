@@ -12,8 +12,11 @@ namespace GymManagementDAL.Repositories.Classes
 {
     internal class MemberRepository : GenericRepository<Member>, IMemberRepository
     {
+        private readonly GymDbContext _context;
+
         public MemberRepository(GymDbContext context) : base(context)
         {
+            _context = context;
         }
         public IEnumerable<Session> GetAllSessions(int MemeberId)
         {
