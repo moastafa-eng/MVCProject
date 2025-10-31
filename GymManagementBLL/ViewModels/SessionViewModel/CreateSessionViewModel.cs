@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymManagementBLL.ViewModels.SessionViewModel
+namespace GymManagementBLL.ViewModels
 {
     public class CreateSessionViewModel
     {

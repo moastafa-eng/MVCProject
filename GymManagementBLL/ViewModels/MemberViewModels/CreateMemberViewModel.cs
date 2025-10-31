@@ -1,12 +1,7 @@
 ﻿using GymManagementDAL.Entities.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GymManagementBLL.ViewModels.MemberViewModels
+namespace GymManagementBLL.ViewModels
 {
     public class CreateMemberViewModel
     {
@@ -36,12 +31,12 @@ namespace GymManagementBLL.ViewModels.MemberViewModels
         [Range(1, int.MaxValue, ErrorMessage = "Building Number must be greater than 0.")]
         public int BuildingNumber { get; set; }
         [Required(ErrorMessage = "Street Is Required")]
-        [RegularExpression(@"^\p{L}+(?: \p{L}+)*$",ErrorMessage = "City name can only contain letters and single spaces — no numbers or special characters.")]
+        [RegularExpression(@"^[A-Za-z\u0600-\u06FF0-9]+(?:[ \-][A-Za-z\u0600-\u06FF0-9]+)*$", ErrorMessage = "City name can only contain letters and single spaces — no numbers or special characters.")]
         [StringLength(100, MinimumLength = 2, ErrorMessage = "City must be between 2 and 100 characters long.")]
         public string City { get; set; } = null!;
 
         [Required(ErrorMessage = "Street Is Required")]
-        [RegularExpression(@"^[\p{L}\d\s\-/]+$", ErrorMessage = "Street name can contain letters, numbers, spaces, dashes, or slashes only.")]
+        [RegularExpression(@"^[A-Za-z\u0600-\u06FF0-9]+(?:[ \-][A-Za-z\u0600-\u06FF0-9]+)*$", ErrorMessage = "Street name can contain letters, numbers, spaces, dashes, or slashes only.")]
         [StringLength(150, MinimumLength = 2, ErrorMessage = "Street must be between 2 and 150 characters long.")]
         public string Street { get; set; } = null!;
 

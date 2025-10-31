@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using GymManagementBLL.ViewModels.SessionViewModel;
+using GymManagementBLL.ViewModels;
 using GymManagementDAL.Entities;
 using Microsoft.Identity.Client;
 using System;
@@ -23,10 +23,10 @@ namespace GymManagementBLL
     {
         public MappingProfile()
         {
-            MappingSession();
+            MapSession();
         }
 
-        private void MappingSession()
+        private void MapSession()
         {
             // Make configure on Mapping Session.
             CreateMap<Session, SessionViewModel>() // Session is Source, SessionViewModel is Destination

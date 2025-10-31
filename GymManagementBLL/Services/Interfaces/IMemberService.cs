@@ -1,4 +1,4 @@
-﻿using GymManagementBLL.ViewModels.MemberViewModels;
+﻿using GymManagementBLL.ViewModels;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Entities.Enums;
 using System;

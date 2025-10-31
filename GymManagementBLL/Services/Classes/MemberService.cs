@@ -1,8 +1,9 @@
 ﻿using GymManagementBLL.Services.Interfaces;
-using GymManagementBLL.ViewModels.MemberViewModels;
+using GymManagementBLL.ViewModels;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.Classes;
 using GymManagementDAL.Repositories.interfaces;
+using System.Numerics;
 
 namespace GymManagementBLL.Services.Classes
 {
@@ -163,8 +164,8 @@ namespace GymManagementBLL.Services.Classes
                 var activePlans = _unitOfWork.GetRepository<Plan>().GetById(activeMemberShip.PlanId);
 
                 memberViewModel.PlanName = activePlans?.Name;
-                memberViewModel.MemberShipStartDate = activeMemberShip.CreatedAt.ToLongDateString();
-                memberViewModel.MemberShipEndDate = activeMemberShip.EndDate.ToLongDateString();
+                memberViewModel.MembershipStartDate = activeMemberShip.CreatedAt.ToLongDateString();
+                memberViewModel.MembershipEndDate = activeMemberShip.EndDate.ToLongDateString();
             }
 
             return memberViewModel;
@@ -220,13 +221,17 @@ namespace GymManagementBLL.Services.Classes
             var member = _unitOfWork.GetRepository<Member>().GetById(memberId);
 
             if (member is null)
+                return false;
+
+            var ExistingEmail = _unitOfWork.GetRepository<Member>().GetAll(x => x.Email == 
+            model.Email && x.Id != memberId);
+
+            var ExistingPhone = _unitOfWork.GetRepository<Member>().GetAll(x => x.Phone == 
+            model.Phone && x.Id != memberId);
+
+            if (ExistingEmail.Any() || ExistingPhone.Any())
             {
                 return false;
-            }
-
-            if (IsEmailExists(model.Email) || IsPhoneExists(model.Phone))
-            {
-                return false; // Email or Phone already exists
             }
 
             member.Email = model.Email;

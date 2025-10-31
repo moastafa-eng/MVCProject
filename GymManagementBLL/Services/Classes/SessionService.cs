@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using GymManagementBLL.Services.Interfaces;
-using GymManagementBLL.ViewModels.SessionViewModel;
+using GymManagementBLL.ViewModels;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.interfaces;
 

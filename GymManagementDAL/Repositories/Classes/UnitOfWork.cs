@@ -1,7 +1,6 @@
 ﻿using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementDAL.Repositories.Classes
 {
@@ -40,6 +39,6 @@ namespace GymManagementDAL.Repositories.Classes
         }
 
         public int SaveChanges() // Save all tracked changes in one transaction
-        => SaveChanges();
+        =>  _context.SaveChanges();
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymManagementBLL.ViewModels.MemberViewModels
+namespace GymManagementBLL.ViewModels
 {
     // This ViewModel Represents The Data Structure For Displaying Member Information
     // Instead of Exposing The Entire Member Entity Directly it works as a Data Transfer Object (DTO)
@@ -22,8 +22,8 @@ namespace GymManagementBLL.ViewModels.MemberViewModels
         public string Address { get; set; } = null!;
         public string? Photo { get; set; }
         public string? PlanName { get; set; } = null;
-        public string? MemberShipStartDate { get; set; } = null;
-        public string? MemberShipEndDate { get; set; } = null;
+        public string? MembershipStartDate { get; set; } = null;
+        public string? MembershipEndDate { get; set; } = null;
 
     }
 }

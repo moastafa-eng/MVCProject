@@ -38,7 +38,7 @@ namespace GymManagementDAL.Data.DataSeed
         }
 
 
-        #region MyRegion
+        #region Helper Method
 
         // This method asynchronously loads a JSON file from wwwroot/files,
         // checks if it exists, reads its content, and deserializes it into a List<T>.

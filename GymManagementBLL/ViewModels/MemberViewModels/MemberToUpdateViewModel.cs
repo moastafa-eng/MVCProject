@@ -1,12 +1,6 @@
-﻿using GymManagementDAL.Entities.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace GymManagementBLL.ViewModels.MemberViewModels
+namespace GymManagementBLL.ViewModels
 {
     public class MemberToUpdateViewModel
     {
@@ -20,23 +14,24 @@ namespace GymManagementBLL.ViewModels.MemberViewModels
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; } = null!;
 
-        [Required(ErrorMessage = "Phone Is Required")]
-        [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Please enter a valid Egyptian phone number starting with 010, 011, 012, or 015 and containing 11 digits in total.")]
-        [Phone(ErrorMessage = "Invalid Phone Number Format")]
+        [Required(ErrorMessage = "Phone Number Is Required")]
+        [Phone(ErrorMessage = "Invalid phone number")]
+        [RegularExpression(@"^(010|011|012|015)\d{8}$", ErrorMessage = "Phone number must be a valid Egyptian mobile number")]
         [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; } = null!;
 
         [Required(ErrorMessage = "Building Number Is Required")]
         [Range(1, int.MaxValue, ErrorMessage = "Building Number must be greater than 0.")]
         public int BuildingNumber { get; set; }
-        [Required(ErrorMessage = "Street Is Required")]
-        [RegularExpression(@"^\p{L}+(?: \p{L}+)*$", ErrorMessage = "City name can only contain letters and single spaces — no numbers or special characters.")]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = "City must be between 2 and 100 characters long.")]
+
+        [Required(ErrorMessage = "City Is Required")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "City must be between 2 and 100 characters")]
+        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "City can only contain letters and spaces")]
         public string City { get; set; } = null!;
 
         [Required(ErrorMessage = "Street Is Required")]
-        [RegularExpression(@"^[\p{L}\d\s\-/]+$", ErrorMessage = "Street name can contain letters, numbers, spaces, dashes, or slashes only.")]
-        [StringLength(150, MinimumLength = 2, ErrorMessage = "Street must be between 2 and 150 characters long.")]
+        [StringLength(150, MinimumLength = 2, ErrorMessage = "Street must be between 2 and 150 characters")]
+        [RegularExpression(@"^[a-zA-Z0-9\s]+$", ErrorMessage = "Street can only contain letters, numbers, and spaces")]
         public string Street { get; set; } = null!;
 
         [Required(ErrorMessage = "Health Record Is Required")]

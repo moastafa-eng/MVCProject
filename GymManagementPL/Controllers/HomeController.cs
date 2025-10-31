@@ -11,6 +11,7 @@ namespace GymManagementPL.Controllers
         {
             _analyticsService = analyticsService;
         }
+
         public IActionResult Index() // ViewResult inherits from ActionResult and ActionResult implements IActionResult
         {
             var analyticsData = _analyticsService.GetAnalyticsData();

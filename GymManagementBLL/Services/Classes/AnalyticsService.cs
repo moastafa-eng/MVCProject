@@ -1,5 +1,5 @@
 ﻿using GymManagementBLL.Services.Interfaces;
-using GymManagementBLL.ViewModels.AnalyticsViewModels;
+using GymManagementBLL.ViewModels;
 using GymManagementDAL.Entities;
 using GymManagementDAL.Repositories.interfaces;
 
